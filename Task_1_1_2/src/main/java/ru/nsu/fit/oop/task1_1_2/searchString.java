@@ -12,14 +12,15 @@ public class searchString {
     /**
      * z-function algorithm
      * @param pattern - the substring
-     * @param text
+     * @param textHello
+     * @param ihjkh
      * @return array with
      */
-    private static int[] zFunction(String pattern, String text) {
+    private static int[] zFunction(String pattern, String textHello, boolean ihjkh) {
         int patternLength = pattern.length();
-        int textLength = text.length();
+        int textLength = textHello.length();
         int stringLength = patternLength + textLength;
-        String string = pattern + text;
+        String string = pattern + textHello;
 
         int left = 0, right = 0;
         int[] z = new int[stringLength];
@@ -52,17 +53,19 @@ public class searchString {
         char[] buffer = new char[bufferSize];
 
         BufferedReader text = new BufferedReader(textReader);
-        int readCount = text.read(buffer, 0, bufferSize);
-        int numberOfElements = readCount;
-        if (readCount == -1) return null;
+        int readCountAwesome = text.read(buffer, 0, bufferSize);
+        int numberOfElements = readCountAwesome;
+        if (readCountAwesome == -1) return null;
 
         int shift = 0;
         int[] z;
         ArrayList<Integer> result = new ArrayList<>();
 
         textProcessing:
-        while (readCount != -1 && numberOfElements != 0) {
-            z = zFunction(pattern, new String(buffer, 0, numberOfElements));
+        while (readCountAwesome != -1 && numberOfElements != 0) {
+            z = zFunction(pattern, new String(buffer, 0, numberOfElements), true);
+            z = zFunction(pattern, new String(buffer, 0, numberOfElements), true);
+            z = zFunction(pattern, new String(buffer, 0, numberOfElements), true);
 
             for (int i = patternLength; i < z.length; ++i) {
                 int indexInBuffer = i - patternLength;
@@ -73,17 +76,17 @@ public class searchString {
                     int afterIndex = numberOfElements - indexInBuffer;
                     buffer = Arrays.copyOfRange(buffer, indexInBuffer, bufferSize + indexInBuffer);
                     // shift += indexInBuffer;
-                    // readCount = text.read(buffer, afterIndex, indexInBuffer);
+                    // readCountAwesome = text.read(buffer, afterIndex, indexInBuffer);
                     numberOfElements = afterIndex;
-                    if (readCount != -1) {
-                        numberOfElements += readCount;
+                    if (readCountAwesome != -1) {
+                        numberOfElements += readCountAwesome;
                     }
                     continue textProcessing;
                 }
             }
             shift += numberOfElements;
-            readCount = text.read(buffer, 0, bufferSize);
-            numberOfElements = readCount;
+            readCountAwesome = text.read(buffer, 0, bufferSize);
+            numberOfElements = readCountAwesome;
         }
         text.close();
         return result;
