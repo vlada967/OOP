@@ -10,20 +10,6 @@ import java.util.stream.Stream;
 
 class HeapSortTest {
     @Test
-    void testEmpty() {
-        int input[] = new int[] {};
-        int output[] = new int[] {};
-        HeapSort.sort(input);
-        Assertions.assertArrayEquals(input, output);    }
-
-    @Test
-    void testOneNumber() {
-        int input[] = new int[] {1};
-        int output[] = new int[] {1};
-        HeapSort.sort(input);
-        Assertions.assertArrayEquals(input, output);    }
-
-    @Test
     void testNull() {
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> {
@@ -32,19 +18,21 @@ class HeapSortTest {
     }
 
     @ParameterizedTest
-    @MethodSource("SortingArrays")
-    void SortingArrays(int a, int b, int c, int d, int e) {
-        int input1[] = new int[] {a, b, c, d, e};
-        int input2[] = new int[] {a, b, c, d, e};
-        HeapSort.sort(input1);
-        Arrays.sort(input2);
+    @MethodSource("sorting")
+    void sortingArrays(int[] input1) {
+        int input2[] = new int[input1.length];
+        System.arraycopy(input1, 0, input2, 0, input1.length);
+        HeapSort.sort(input2);
+        Arrays.sort(input1);
         Assertions.assertArrayEquals(input1, input2);
     }
-    private static Stream<Arguments> SortingArrays() {
+    private static Stream<Arguments> sorting() {
         return Stream.of(
-                Arguments.of(5, 4, 3, 2, 1),
-                Arguments.of(6, -1, 3, -27, 0),
-                Arguments.of(1000000000, 2, 3, 4, 0)
+                Arguments.of(new int[]{5, 4, 3, 2, 1}),
+                Arguments.of(new int[]{6, -1, 3, -27, 0}),
+                Arguments.of(new int[]{1000000000, 2, 3, 4, 0}),
+                Arguments.of(new int[]{1}),
+                Arguments.of(new int[]{})
         );
         }
     }
