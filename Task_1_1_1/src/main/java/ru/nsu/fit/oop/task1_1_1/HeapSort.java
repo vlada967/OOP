@@ -1,11 +1,11 @@
 package ru.nsu.fit.oop.task1_1_1;
 
 public class HeapSort {
+    /**
+    * heap sorting
+    * @param arr - sorting array
+    */
     public static void sort(int arr[]) {
-        /**
-         * heap sorting
-         * @param arr - sorting array
-         */
         if (arr == null) {
             throw new IllegalArgumentException("Null array is not allowed");
         }
@@ -18,14 +18,13 @@ public class HeapSort {
             heapify(arr, i, 0);
         }
     }
-
+    /**
+     * Procedure for converting a subtree to a binary heap with the root node i.
+     * @param arr - sorting array.
+     * @param n - the heap size.
+     * @param i - root node.
+     */
     private static void heapify(int arr[], int n, int i) {
-        /**
-         * Procedure for converting a subtree to a binary heap with the root node i.
-         * @param arr - sorting array.
-         * @param n - the heap size.
-         * @param i - root node.
-         */
         int largest = i;
         int l = 2 * i + 1;
         int r = 2 * i + 2;
