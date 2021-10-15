@@ -6,7 +6,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class searchString {
+public class SearchString {
     /**
      * z-function algorithm
      * @param pattern - the substring
