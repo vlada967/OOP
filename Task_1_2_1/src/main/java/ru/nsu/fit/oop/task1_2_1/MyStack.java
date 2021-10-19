@@ -1,9 +1,6 @@
 package ru.nsu.fit.oop.task1_2_1;
-
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.EmptyStackException;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * Class that implements the work of the stack.
@@ -19,7 +16,7 @@ public class MyStack<T> implements Iterable<T> {
     public MyStack(int capacity) {
         this.capacity = capacity;
         count = 0;
-        stack = (T[]) new Object[capacity];
+        stack = (T[]) Array.newInstance(Object.class, capacity);
     }
 
     public MyStack() {
@@ -28,6 +25,7 @@ public class MyStack<T> implements Iterable<T> {
 
     /**
      * Method that pushes the element to the stack.
+     *
      * @param element - element that we need to put in the stack.
      */
     public void push(T element) {
@@ -44,6 +42,7 @@ public class MyStack<T> implements Iterable<T> {
 
     /**
      * Method that gets element from the stack.
+     *
      * @return element of the stack if it exists, otherwise throws exception.
      * @throws EmptyStackException if the stack is empty.
      */
@@ -57,42 +56,28 @@ public class MyStack<T> implements Iterable<T> {
     }
 
     /**
-     * Method that turns a stack into array
-     * @param stack
-     * @return - array
-     */
-    private T[] stackIntoArray(MyStack<T> stack) {
-        final int amount = stack.count();
-        T[] array = (T[]) new Object[amount];
-        for (int i = amount - 1; i >= 0; i--) {
-            array[i] = stack.pop();
-        }
-        return array;
-    }
-
-    /**
      * Method that pushes the elements to the stack.
+     *
      * @param src - elements that we need to put in the stack
      */
     public void pushStack(MyStack<T> src) {
-        final int amount = src.count();
-        if (amount == 0) {
+        final int amount = src.size();
+        if (amount == 0)
             return;
+        capacity += amount;
+        stack = Arrays.copyOf(stack, capacity);
+        for (int i = count + amount - 1; i > count - 1; i--) {
+            stack[i] = src.pop();
         }
-        T[] array = stackIntoArray(src);
-        if (count + amount >= capacity) {
-            capacity = capacity * 2 * (count + amount);
-            stack = Arrays.copyOf(stack, capacity);
-        }
-        System.arraycopy(array, 0, stack, count, amount);
         count += amount;
     }
 
     /**
      * Method that gets elements from the stack.
+     *
      * @return elements of the stack
      * @throws IllegalArgumentException if the input is incorrect.
-     * @throws EmptyStackException if the stack is empty.
+     * @throws EmptyStackException      if the stack is empty.
      */
     public MyStack<T> popStack(int amount) {
         if (amount < 0) {
@@ -102,7 +87,7 @@ public class MyStack<T> implements Iterable<T> {
             throw new EmptyStackException();
         }
         MyStack<T> result = new MyStack<>();
-        for (int i = count - amount; i < count; ++i) {
+        for (int i = count - amount; i < count; i++) {
             result.push(this.stack[i]);
             this.stack[i] = null;
         }
@@ -112,14 +97,16 @@ public class MyStack<T> implements Iterable<T> {
 
     /**
      * Method that gets amount of elements in the stack.
+     *
      * @return amount of pushed elements in the stack.
      */
-    public int count() {
+    public int size() {
         return count;
     }
 
     /**
      * Implementation of the Iterator for the stack.
+     *
      * @return next element of the stack.
      */
     @Override
@@ -131,6 +118,7 @@ public class MyStack<T> implements Iterable<T> {
             public boolean hasNext() {
                 return index != count;
             }
+
             @Override
             public T next() {
                 if (!hasNext()) {
