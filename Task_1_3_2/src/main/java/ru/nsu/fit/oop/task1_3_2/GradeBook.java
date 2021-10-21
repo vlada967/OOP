@@ -1,14 +1,22 @@
 package ru.nsu.fit.oop.task1_3_2;
 
-public class GradeBook extends Semester {
+public class GradeBook {
     private int id;
     private final Student student;
     private double averageScore;
     private Semester[] semesters;
     private Diploma diploma;
 
+    /**
+     * The main method that creates the grade book
+     * @param id - id of the grade book
+     * @param studentName - name of the student
+     * @param studentSurname - surname of the student
+     * @param studentSpeciality - speciality (faculty) of the student
+     * @param currentSemester - current semester of the studying
+     * @throws IllegalArgumentException
+     */
     public GradeBook(int id, String studentName, String studentSurname, String studentSpeciality, int currentSemester) throws IllegalArgumentException {
-        super();
         if (id < 0) {
             throw new IllegalArgumentException("Record book record book number cannot be negative. ");
         }
@@ -22,7 +30,7 @@ public class GradeBook extends Semester {
             throw new IllegalArgumentException("You have not provided the student's speciality. ");
         }
         if (currentSemester <= 0) {
-            throw new IllegalArgumentException("ru.nsu.fit.oop.task1_3_2.Semester number cannot be less or equal than zero. ");
+            throw new IllegalArgumentException("Semester number cannot be less or equal than zero. ");
         }
         this.id = id;
         this.student = new Student(studentName, studentSurname, studentSpeciality, currentSemester);
@@ -31,12 +39,19 @@ public class GradeBook extends Semester {
         this.averageScore = 0.0;
     }
 
+    /**
+     * The method for getting an average score of the grades
+     * @return - average score
+     */
     public double getAverageScore() {
         calculateAverageScore();
         return averageScore;
     }
 
-    private double calculateAverageScore() {
+    /**
+     * The method for calculating an average score of the grades
+     */
+    private void calculateAverageScore() {
         double sumOfGrades = 0.0;
         double numberOfSubjects = 0.0;
         for (Semester semester : semesters) {
@@ -45,13 +60,31 @@ public class GradeBook extends Semester {
                 numberOfSubjects += semester.getNumberOfSubjects();
             }
         }
-        return sumOfGrades / numberOfSubjects;
+        averageScore = sumOfGrades / numberOfSubjects;
     }
 
+    /**
+     * The method for adding a qualifying work in diploma
+     * @param topic - topic of the qualifying work
+     * @param grade - grade of the qualifying work
+     * @param teacher - supervisor of the qualifying work
+     */
+    public void addQualifyingWork(String topic, int grade, String teacher) {
+        diploma.addQualifyingWork(topic, grade, teacher);
+    }
+
+    /**
+     * Method to check whether the diploma is with honors
+     * @return true if the diploma is with honors; false otherwise
+     */
     public boolean hasHonorsDegree() {
         return diploma.isHonorsDegree();
     }
 
+    /**
+     * Method to check whether the student has high scholarship
+     * @return true if the student has high scholarship; false otherwise
+     */
     public boolean hasHighScholarship() {
         int pastSemesterId = student.getCurrentSemester() - 1;
         Semester pastSemester = semesters[pastSemesterId];
@@ -61,5 +94,20 @@ public class GradeBook extends Semester {
         }
         double result = pastSemester.getSumOfGrades() / pastSemester.getNumberOfSubjects();
         return result == 5.0;
+    }
+
+    /**
+     * Method to add the attestation (exam or credit) to the grade book
+     * @param currentSemester - semester when the subject was studied
+     * @param name - name of the subject
+     * @param grade - grade for the exam or credit
+     * @param teacher - teacher of the subject
+     */
+    public void addAttestation(int currentSemester, String name, int grade, String teacher){
+        if (semesters[currentSemester] == null) {
+            semesters[currentSemester] = new Semester();
+        }
+        semesters[currentSemester].addAttestation(currentSemester, name, grade, teacher);
+        diploma.addSubjectToSupplement(name, grade, teacher);
     }
 }
