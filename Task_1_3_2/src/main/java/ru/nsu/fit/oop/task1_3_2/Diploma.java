@@ -8,23 +8,32 @@ record QualifyingWork(String topic, int grade, String teacher) {
 public class Diploma {
     private QualifyingWork qualifyingWork;
     private HashMap<String, Subject> supplement;
-
-    private double satisfactoryInRecordBook;
-    private double excellentInSupplement;
-    private double numberOfSubjects;
+    private int satisfactoryInGradeBook;
+    private int excellentInSupplement;
+    private int numberOfSubjects;
 
     public Diploma() {
         qualifyingWork = null;
         supplement = new HashMap<>();
-        satisfactoryInRecordBook = 0.0;
-        excellentInSupplement = 0.0;
-        numberOfSubjects = 0.0;
+        satisfactoryInGradeBook = 0;
+        excellentInSupplement = 0;
+        numberOfSubjects = 0;
     }
 
+    /**
+     * Method to get the qualifying work
+     * @return qualifying work
+     */
     public QualifyingWork getQualifyingWork() {
         return qualifyingWork;
     }
 
+    /**
+     *  Method to add the qualifying work to the grade book
+     * @param topic - topic of the qualifying work
+     * @param grade - grade for the qualifying work
+     * @param teacher - supervisor of the qualifying work
+     */
     public void addQualifyingWork(String topic, int grade, String teacher) {
         if (qualifyingWork != null) {
             System.out.println("You cannot change an existing qualifying work.");
@@ -33,9 +42,15 @@ public class Diploma {
         qualifyingWork = new QualifyingWork(topic, grade, teacher);
     }
 
+    /**
+     * Method to add the subject to supplement
+     * @param name - name of the subject
+     * @param grade - grade for the subject
+     * @param teacher - examinator
+     */
     public void addSubjectToSupplement(String name, int grade, String teacher) {
-        if (grade == 5) {
-            satisfactoryInRecordBook++;
+        if (grade == 3) {
+            satisfactoryInGradeBook++;
         }
         if (!supplement.containsKey(name)) {
             numberOfSubjects++;
@@ -49,8 +64,12 @@ public class Diploma {
         supplement.put(name, subject);
     }
 
+    /**
+     * Method to check whether the diploma is with honors
+     * @return true if the diploma is with honors; false otherwise
+     */
     public boolean isHonorsDegree() {
-        if (satisfactoryInRecordBook != 0) return false;
+        if (satisfactoryInGradeBook != 0) return false;
         if (excellentInSupplement / numberOfSubjects < 0.75) return false;
         return qualifyingWork != null && qualifyingWork.grade() == 5;
     }
