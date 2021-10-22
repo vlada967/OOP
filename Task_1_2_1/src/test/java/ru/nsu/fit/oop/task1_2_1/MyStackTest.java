@@ -22,26 +22,26 @@ class MyStackTest {
     }
 
     @Test
-    void testPush_throwsException() {
+    void testPushThrowsException() {
         assertThrows(IllegalArgumentException.class, () -> stack.push(null));
     }
 
     @Test
-    void testPush_numberOfElements() {
+    void testPushNumberOfElements() {
         pushElements(this.stack, count);
         int actualCount = stack.size();
         assertEquals(count, actualCount);
     }
 
     @Test
-    void testPush_orderOfElements() {
+    void testPushOrderOfElements() {
         pushElements(stack, count);
         count = 0;
         stack.forEach(element -> assertEquals(element, count++));
     }
 
     @Test
-    void testPushStack_numberOfElements() {
+    void testPushStackNumberOfElements() {
         MyStack<Integer> temp = new MyStack<>();
         pushElements(temp, count);
         stack.pushStack(temp);
@@ -50,7 +50,7 @@ class MyStackTest {
     }
 
     @Test
-    void testPushStack_orderOfElements() {
+    void testPushStackOrderOfElements() {
         MyStack<Integer> temp = new MyStack<>();
         pushElements(temp, count);
 
@@ -64,12 +64,12 @@ class MyStackTest {
     }
 
     @Test
-    void testPop_throwsException() {
+    void testPopThrowsException() {
         assertThrows(EmptyStackException.class, stack::pop);
     }
 
     @Test
-    void testPop_numberOfElements() {
+    void testPopNumberOfElements() {
         pushElements(this.stack, count);
 
         for (int i = count - 1; i >= 0; i--) {
@@ -81,7 +81,7 @@ class MyStackTest {
     }
 
     @Test
-    void testPop_orderOfElements() {
+    void testPopOrderOfElements() {
         pushElements(this.stack, count);
 
         for (int i = count - 1; i >= 0; i--) {
@@ -92,12 +92,12 @@ class MyStackTest {
     }
 
     @Test
-    void testPopStack_throwsException() {
+    void testPopStackThrowsException() {
         assertThrows(EmptyStackException.class, () -> stack.popStack(1));
     }
 
     @Test
-    void testPopStack_numberOfElements() {
+    void testPopStackNumberOfElements() {
         pushElements(this.stack, count);
         stack.popStack(count);
         int expectedCount = 0;
@@ -106,7 +106,7 @@ class MyStackTest {
     }
 
     @Test
-    void testPopStack_orderOfElements() {
+    void testPopStackOrderOfElements() {
         pushElements(this.stack, count);
         MyStack<Integer> result = stack.popStack(count);
         for (int i = count - 1; i >= 0; i--) {
@@ -127,7 +127,7 @@ class MyStackTest {
     }
 
     @Test
-    void testIterator_hasNext() {
+    void testIteratorHasNext() {
         Iterator<Integer> iterator = stack.iterator();
         assertFalse(iterator.hasNext());
 
@@ -137,7 +137,7 @@ class MyStackTest {
     }
 
     @Test
-    void testIterator_next() {
+    void testIteratorNext() {
         pushElements(this.stack, count);
         Iterator<Integer> iterator = stack.iterator();
         for (int i = 0; i < count; i++) {

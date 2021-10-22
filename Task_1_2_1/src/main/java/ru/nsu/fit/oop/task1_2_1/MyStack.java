@@ -10,11 +10,9 @@ public class MyStack<T> implements Iterable<T> {
 
     private T[] stack;
     private int count;
-    private int capacity;
-    final private static int DEFAULT_CAPACITY = 100;
+    private final static int DEFAULT_CAPACITY = 100;
 
     public MyStack(int capacity) {
-        this.capacity = capacity;
         count = 0;
         stack = (T[]) Array.newInstance(Object.class, capacity);
     }
@@ -32,12 +30,15 @@ public class MyStack<T> implements Iterable<T> {
         if (element == null) {
             throw new IllegalArgumentException();
         }
-        if (count == capacity) {
-            capacity *= 2;
-            stack = Arrays.copyOf(stack, capacity);
+        if (count == stack.length) {
+            stack = grow(stack.length * 2);
         }
         stack[count] = element;
         count++;
+    }
+
+    private T[] grow(int newCapacity) {
+        return Arrays.copyOf(stack, newCapacity);
     }
 
     /**
@@ -64,8 +65,10 @@ public class MyStack<T> implements Iterable<T> {
         final int amount = src.size();
         if (amount == 0)
             return;
-        capacity += amount;
-        stack = Arrays.copyOf(stack, capacity);
+        if (count == stack.length) {
+            stack = grow(stack.length * 2);
+        }
+        stack = Arrays.copyOf(stack, stack.length);
         for (int i = count + amount - 1; i > count - 1; i--) {
             stack[i] = src.pop();
         }
