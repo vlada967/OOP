@@ -29,12 +29,12 @@ public class Diploma {
     }
 
     /**
-     *  Method to add the qualifying work to the grade book
+     *  Method to set the qualifying work to the grade book
      * @param topic - topic of the qualifying work
      * @param grade - grade for the qualifying work
      * @param teacher - supervisor of the qualifying work
      */
-    public void addQualifyingWork(String topic, int grade, String teacher) {
+    public void setQualifyingWork(String topic, int grade, String teacher) {
         if (qualifyingWork != null) {
             System.out.println("You cannot change an existing qualifying work.");
             return;
@@ -50,13 +50,19 @@ public class Diploma {
      */
     public void addSubjectToSupplement(String name, int grade, String teacher) {
         if (grade == 3) {
-            satisfactoryInGradeBook++;
+            satisfactoryInGradeBook = 1;
         }
         if (!supplement.containsKey(name)) {
             numberOfSubjects++;
+            if (grade == 5) {
+                excellentInSupplement++;
+            }
         } else {
             Subject inSupplement = supplement.get(name);
-            if (inSupplement.grade() != grade && grade == 5) {
+            if (inSupplement.grade() == 5) {
+                excellentInSupplement--;
+            }
+            if (grade == 5) {
                 excellentInSupplement++;
             }
         }

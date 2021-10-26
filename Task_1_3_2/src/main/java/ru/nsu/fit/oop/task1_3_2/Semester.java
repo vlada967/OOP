@@ -7,12 +7,12 @@ record Subject(String name, int grade, String teacher) {
 
 public class Semester {
     private HashMap<String, Subject> subjects;
-    private double sumOfGrades;
-    private double numberOfSubjects;
+    private int sumOfGrades;
+    private int numberOfSubjects;
 
     public Semester() {
-        this.numberOfSubjects = 0.0;
-        this.sumOfGrades = 0.0;
+        this.numberOfSubjects = 0;
+        this.sumOfGrades = 0;
         this.subjects = new HashMap<>();
     }
 
