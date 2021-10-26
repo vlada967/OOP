@@ -1,5 +1,9 @@
 package ru.nsu.fit.oop.task1_3_2;
 
+import java.util.Arrays;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 public class GradeBook {
     private int id;
     private final Student student;
@@ -8,7 +12,7 @@ public class GradeBook {
     private Diploma diploma;
 
     /**
-     * The main method that creates the grade book
+     * The method that creates the grade book
      * @param id - id of the grade book
      * @param studentName - name of the student
      * @param studentSurname - surname of the student
@@ -18,23 +22,26 @@ public class GradeBook {
      */
     public GradeBook(int id, String studentName, String studentSurname, String studentSpeciality, int currentSemester) throws IllegalArgumentException {
         if (id < 0) {
-            throw new IllegalArgumentException("Record book record book number cannot be negative. ");
+            throw new IllegalArgumentException("Record book number cannot be negative.");
         }
         if (studentName == null || studentName.equals("")) {
-            throw new IllegalArgumentException("You have not provided the student's name. ");
+            throw new IllegalArgumentException("You have not provided the student's name.");
         }
         if (studentSurname == null || studentSurname.equals("")) {
-            throw new IllegalArgumentException("You have not provided the student's surname. ");
+            throw new IllegalArgumentException("You have not provided the student's surname.");
         }
         if (studentSpeciality == null || studentSpeciality.equals("")) {
-            throw new IllegalArgumentException("You have not provided the student's speciality. ");
+            throw new IllegalArgumentException("You have not provided the student's speciality.");
         }
         if (currentSemester <= 0) {
-            throw new IllegalArgumentException("Semester number cannot be less or equal than zero. ");
+            throw new IllegalArgumentException("Semester number cannot be less or equal than zero.");
+        }
+        if (currentSemester > 10) {
+            throw new IllegalArgumentException("Semester number cannot be more than ten.");
         }
         this.id = id;
         this.student = new Student(studentName, studentSurname, studentSpeciality, currentSemester);
-        this.semesters = new Semester[8];
+        this.semesters = new Semester[10];
         this.diploma = new Diploma();
         this.averageScore = 0.0;
     }
@@ -70,7 +77,7 @@ public class GradeBook {
      * @param teacher - supervisor of the qualifying work
      */
     public void addQualifyingWork(String topic, int grade, String teacher) {
-        diploma.addQualifyingWork(topic, grade, teacher);
+        diploma.setQualifyingWork(topic, grade, teacher);
     }
 
     /**
@@ -86,6 +93,10 @@ public class GradeBook {
      * @return true if the student has high scholarship; false otherwise
      */
     public boolean hasHighScholarship() {
+        if (student.getCurrentSemester() == 1) {
+            System.out.println("High scholarship is not provided in the first semester");
+            return false;
+        }
         int pastSemesterId = student.getCurrentSemester() - 1;
         Semester pastSemester = semesters[pastSemesterId];
         if (pastSemester == null) {
@@ -93,7 +104,7 @@ public class GradeBook {
             return false;
         }
         double result = pastSemester.getSumOfGrades() / pastSemester.getNumberOfSubjects();
-        return result == 5.0;
+        return result == 5.000;
     }
 
     /**
