@@ -9,18 +9,20 @@ public class Semester {
     private HashMap<String, Subject> subjects;
     private int sumOfGrades;
     private int numberOfSubjects;
+    public int[] grades;
 
     public Semester() {
         this.numberOfSubjects = 0;
         this.sumOfGrades = 0;
         this.subjects = new HashMap<>();
+        this.grades = new int[15];
     }
 
     /**
      * Method to get the number of subjects
      * @return the number of subjects
      */
-    public double getNumberOfSubjects() {
+    public int getNumberOfSubjects() {
         return numberOfSubjects;
     }
 
@@ -49,7 +51,11 @@ public class Semester {
     public void addAttestation(int currentSemester, String name, int grade, String teacher) {
         numberOfSubjects++;
         sumOfGrades += grade;
+        grades[numberOfSubjects] = grade;
         Subject subject = new Subject(name, grade, teacher);
         subjects.put(name, subject);
+    }
+    public int[] getGrades(int currentSemester) {
+        return grades;
     }
 }

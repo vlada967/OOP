@@ -1,9 +1,5 @@
 package ru.nsu.fit.oop.task1_3_2;
 
-import java.util.Arrays;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
 public class GradeBook {
     private int id;
     private final Student student;
@@ -103,8 +99,13 @@ public class GradeBook {
             System.out.println("No information about past semester.");
             return false;
         }
-        double result = pastSemester.getSumOfGrades() / pastSemester.getNumberOfSubjects();
-        return result == 5.000;
+        int[] grades = pastSemester.getGrades(pastSemesterId);
+        int l = pastSemester.getNumberOfSubjects();
+        for (int i = 1; i <= l; i++) {
+            if (grades[i] == 5);
+            else return false;
+        }
+        return true;
     }
 
     /**
