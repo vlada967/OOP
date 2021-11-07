@@ -8,14 +8,14 @@ record QualifyingWork(String topic, int grade, String teacher) {
 public class Diploma {
     private QualifyingWork qualifyingWork;
     private HashMap<String, Subject> supplement;
-    private int satisfactoryInGradeBook;
+    private boolean satisfactoryInGradeBook;
     private int excellentInSupplement;
     private int numberOfSubjects;
 
     public Diploma() {
         qualifyingWork = null;
         supplement = new HashMap<>();
-        satisfactoryInGradeBook = 0;
+        satisfactoryInGradeBook = false;
         excellentInSupplement = 0;
         numberOfSubjects = 0;
     }
@@ -50,7 +50,7 @@ public class Diploma {
      */
     public void addSubjectToSupplement(String name, int grade, String teacher) {
         if (grade == 3) {
-            satisfactoryInGradeBook = 1;
+            satisfactoryInGradeBook = true;
         }
         if (!supplement.containsKey(name)) {
             numberOfSubjects++;
@@ -75,7 +75,7 @@ public class Diploma {
      * @return true if the diploma is with honors; false otherwise
      */
     public boolean isHonorsDegree() {
-        if (satisfactoryInGradeBook != 0) return false;
+        if (satisfactoryInGradeBook != false) return false;
         if (excellentInSupplement / numberOfSubjects < 0.75) return false;
         return qualifyingWork != null && qualifyingWork.grade() == 5;
     }

@@ -2,6 +2,7 @@ plugins {
     id 'java'
 }
 
+group 'ru.nsu.fit.oop.task1_3_2'
 version 'unspecified'
 
 repositories {
