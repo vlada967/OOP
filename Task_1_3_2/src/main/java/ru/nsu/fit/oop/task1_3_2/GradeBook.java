@@ -72,7 +72,7 @@ public class GradeBook {
      * @param grade - grade of the qualifying work
      * @param teacher - supervisor of the qualifying work
      */
-    public void addQualifyingWork(String topic, int grade, String teacher) {
+    public void setQualifyingWork(String topic, int grade, String teacher) {
         diploma.setQualifyingWork(topic, grade, teacher);
     }
 
@@ -90,7 +90,6 @@ public class GradeBook {
      */
     public boolean hasHighScholarship() {
         if (student.getCurrentSemester() == 1) {
-            System.out.println("High scholarship is not provided in the first semester");
             return false;
         }
         int pastSemesterId = student.getCurrentSemester() - 1;
@@ -102,8 +101,8 @@ public class GradeBook {
         int[] grades = pastSemester.getGrades(pastSemesterId);
         int l = pastSemester.getNumberOfSubjects();
         for (int i = 1; i <= l; i++) {
-            if (grades[i] == 5);
-            else return false;
+            if (grades[i] != 5)
+                return false;
         }
         return true;
     }
