@@ -75,8 +75,8 @@ public class Diploma {
      * @return true if the diploma is with honors; false otherwise
      */
     public boolean isHonorsDegree() {
-        if (satisfactoryInGradeBook != false) return false;
-        if (excellentInSupplement / numberOfSubjects < 0.75) return false;
+        if (satisfactoryInGradeBook) return false;
+        if ((double)excellentInSupplement / (double)numberOfSubjects < 0.75) return false;
         return qualifyingWork != null && qualifyingWork.grade() == 5;
     }
 }

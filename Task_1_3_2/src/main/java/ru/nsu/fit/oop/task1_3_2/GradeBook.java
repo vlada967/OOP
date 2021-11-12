@@ -101,8 +101,9 @@ public class GradeBook {
         int[] grades = pastSemester.getGrades(pastSemesterId);
         int l = pastSemester.getNumberOfSubjects();
         for (int i = 1; i <= l; i++) {
-            if (grades[i] != 5)
+            if (grades[i] != 5) {
                 return false;
+            }
         }
         return true;
     }
