@@ -11,37 +11,37 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NotPrimeSearchTest {
     @Test
-    public void isPrime_negativeNumber() {
+    public void isPrimeNegativeNumber() {
         Assertions.assertFalse(new NotPrimeSearch().isPrime(-10));
     }
 
     @Test
-    public void isPrime_smallNumber() {
+    public void isPrimeSmallNumber() {
         assertTrue(new NotPrimeSearch().isPrime(3));
     }
 
     @Test
-    public void isPrime_evenNumber() {
+    public void isPrimeEvenNumber() {
         assertFalse(new NotPrimeSearch().isPrime(200));
     }
 
     @Test
-    public void isPrime_largePrimeNumber() {
+    public void isPrimeLargePrimeNumber() {
         assertTrue(new NotPrimeSearch().isPrime(1073676287));
     }
 
     @Test
-    public void isPrime_largeNotPrimeNumber() {
+    public void isPrimeLargeNotPrimeNumber() {
         assertFalse(new NotPrimeSearch().isPrime(16217903));
     }
 
     @Test
-    public void search_throwsNullPointerException() {
+    public void searchThrowsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new NotPrimeSearch().search(null));
     }
 
     @Test
-    public void search_smallData1() throws ExecutionException, InterruptedException {
+    public void searchSmallData1() throws ExecutionException, InterruptedException {
         int size = 100;
         int[] array = new int[size];
         Arrays.fill(array, 0, size, 17);
@@ -49,7 +49,7 @@ class NotPrimeSearchTest {
     }
 
     @Test
-    public void search_smallData2() throws ExecutionException, InterruptedException {
+    public void searchSmallData2() throws ExecutionException, InterruptedException {
         int size = 100;
         int[] array = new int[size];
         Arrays.fill(array, 0, size - 1, 13);
@@ -58,7 +58,7 @@ class NotPrimeSearchTest {
     }
 
     @Test
-    public void search_largeData1() throws ExecutionException, InterruptedException {
+    public void searchLargeData1() throws ExecutionException, InterruptedException {
         int size = 1000000;
         int[] array = new int[size];
         Arrays.fill(array, 0, size, 16127);
@@ -66,7 +66,7 @@ class NotPrimeSearchTest {
     }
 
     @Test
-    public void search_largeData2() throws ExecutionException, InterruptedException {
+    public void searchLargeData2() throws ExecutionException, InterruptedException {
         int size = 1000000;
         int[] array = new int[size];
         Arrays.fill(array, 0, size - 1, 32469);

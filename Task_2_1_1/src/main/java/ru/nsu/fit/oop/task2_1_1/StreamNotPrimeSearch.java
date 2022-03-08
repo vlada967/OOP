@@ -10,6 +10,6 @@ public class StreamNotPrimeSearch extends NotPrimeSearch {
             throw new NullPointerException();
         }
         IntStream intStream = Arrays.stream(array);
-        return intStream.parallel().anyMatch(number -> !isPrime(number));
+        return !intStream.parallel().noneMatch(number -> isPrime(number));
     }
 }

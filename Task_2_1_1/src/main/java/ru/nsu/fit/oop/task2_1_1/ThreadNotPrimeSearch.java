@@ -5,6 +5,15 @@ import java.util.concurrent.*;
 
 public class ThreadNotPrimeSearch extends NotPrimeSearch {
     private Deque<Integer> deque;
+    private final Callable<Boolean> SEARCH_NOT_PRIME_TASK = () -> {
+        Integer number;
+        while ((number = getNumber()) != null) {
+            if (!isPrime(number)) {
+                return true;
+            }
+        }
+        return false;
+    };
 
     private synchronized Integer getNumber() {
         if (deque.isEmpty()) {
@@ -14,37 +23,23 @@ public class ThreadNotPrimeSearch extends NotPrimeSearch {
     }
 
     @Override
-    public boolean search(int[] array) throws ExecutionException, InterruptedException, NullPointerException {
+    public boolean search(int[] array) throws InterruptedException, NullPointerException {
         if (array == null) {
             throw new NullPointerException();
         }
         final int threadsNumber = Runtime.getRuntime().availableProcessors();
-        List<Integer> numberList = Arrays.stream(array).boxed().toList();
-        deque = new ArrayDeque<>(numberList);
+        deque = new ArrayDeque<>(Arrays.stream(array).boxed().toList());
 
-        Callable<Boolean> task = () -> {
-            Integer number;
-            while ((number = getNumber()) != null) {
-                if (!isPrime(number)) {
-                    return true;
-                }
-            }
-            return false;
-        };
-        List<Callable<Boolean>> tasks = new ArrayList<>();
-        for (int i = 0; i < threadsNumber; ++i) {
-            tasks.add(task);
-        }
-
-        ExecutorService pool = Executors.newFixedThreadPool(threadsNumber);
-        List<Future<Boolean>> futureList = pool.invokeAll(tasks);
-        for (Future<Boolean> future : futureList) {
-            if (future.get()) {
-                pool.shutdownNow();
-                return true;
-            }
-        }
-        pool.shutdownNow();
-        return false;
+        return Executors
+                .newFixedThreadPool(threadsNumber)
+                .invokeAll(Collections.nCopies(threadsNumber, SEARCH_NOT_PRIME_TASK))
+                .stream()
+                .anyMatch(future -> {
+                    try {
+                        return future.get(100, TimeUnit.MILLISECONDS);
+                    } catch (InterruptedException | ExecutionException | TimeoutException exception) {
+                        throw new RuntimeException(exception);
+                    }
+                });
     }
 }
