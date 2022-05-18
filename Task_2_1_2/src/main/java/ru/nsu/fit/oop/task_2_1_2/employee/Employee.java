@@ -1,11 +1,13 @@
 package ru.nsu.fit.oop.task_2_1_2.employee;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * The implementation of this abstract method allows you to simulate the work of an employee.
  */
 public abstract class Employee implements Runnable {
+    private final AtomicBoolean running = new AtomicBoolean(false);
     private final int id;
-    private boolean runEmployee;
 
     /**
      * Constructor of an abstract class. Allows to set the employee id.
@@ -14,7 +16,6 @@ public abstract class Employee implements Runnable {
      */
     public Employee(int id) {
         this.id = id;
-        this.runEmployee = false;
     }
 
     /**
@@ -36,8 +37,13 @@ public abstract class Employee implements Runnable {
      */
     @Override
     public void run() {
-        runEmployee = true;
-        while (runEmployee) {
+        running.set(true);
+        while (running.get()) {
+            if (Thread.currentThread().isInterrupted()) {
+                Thread.currentThread().interrupt();
+                running.set(false);
+                break;
+            }
             work();
         }
     }
@@ -46,6 +52,6 @@ public abstract class Employee implements Runnable {
      * Stops the run method.
      */
     public void stop() {
-        runEmployee = false;
+        running.set(false);
     }
 }

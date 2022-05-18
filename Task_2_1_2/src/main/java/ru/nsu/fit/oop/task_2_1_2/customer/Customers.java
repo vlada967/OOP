@@ -3,12 +3,14 @@ package ru.nsu.fit.oop.task_2_1_2.customer;
 import ru.nsu.fit.oop.task_2_1_2.queue.MyBlockingDequeue;
 import ru.nsu.fit.oop.task_2_1_2.order.Order;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * The Customers class simulates the behavior of the customers flow.
  * Customers create orders and place them in a shared order queue.
  */
 public class Customers implements Runnable {
-    private boolean runCustomers;
+    private final AtomicBoolean running = new AtomicBoolean(false);
     private final MyBlockingDequeue<Order> queue;
 
     /**
@@ -17,17 +19,19 @@ public class Customers implements Runnable {
      * @param queue - shared order queue.
      */
     public Customers(MyBlockingDequeue<Order> queue) {
-        this.runCustomers = false;
         this.queue = queue;
     }
+
     /**
      * Implementation of the Runnable interface. Starts the customers flow and stops only when stop method is called.
      */
     @Override
     public void run() {
-        runCustomers = true;
-        for (int i = 0; runCustomers; ++i) {
-            Order order = new Order(i);
+        int index = 0;
+        running.set(true);
+        while (running.get()) {
+            index++;
+            Order order = new Order(index);
             new Customer(this.queue).produce(order);
         }
     }
@@ -36,6 +40,6 @@ public class Customers implements Runnable {
      * Stops the flow of customers.
      */
     public void stop() {
-        runCustomers = false;
+        running.set(false);
     }
 }

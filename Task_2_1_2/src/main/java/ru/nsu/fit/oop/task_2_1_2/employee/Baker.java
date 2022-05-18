@@ -1,11 +1,11 @@
 package ru.nsu.fit.oop.task_2_1_2.employee;
 
-import ru.nsu.fit.oop.task_2_1_2.consumer.Consumer;
 import ru.nsu.fit.oop.task_2_1_2.order.Order;
-import ru.nsu.fit.oop.task_2_1_2.producer.Producer;
 import ru.nsu.fit.oop.task_2_1_2.queue.MyBlockingDequeue;
 
 import java.util.Random;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static ru.nsu.fit.oop.task_2_1_2.order.State.COOKING;
 import static ru.nsu.fit.oop.task_2_1_2.order.State.IN_STOCK;
@@ -14,7 +14,7 @@ import static ru.nsu.fit.oop.task_2_1_2.order.State.IN_STOCK;
  * The Baker class simulates the work of a baker.
  * The baker receives an order from the general queue of orders, within a certain time (depending on his work experience) makes an order and places it in the storage.
  */
-public class Baker extends Employee implements Consumer<Order>, Producer<Order> {
+public class Baker extends Employee implements Consumer<Order>, Supplier<Order> {
     private static final long MAX_COOKING_TIME = 5000;
     private final int workingExperience;
     private final Random random;
@@ -38,20 +38,17 @@ public class Baker extends Employee implements Consumer<Order>, Producer<Order> 
     }
 
     /**
-     * Retrieves an order from the order queue.
-     *
-     * @return consumed order.
+     * Takes an order out of the order queue, executes the order within a certain time, and then sends it to the storage.
+     * This method is used in the run method, which allows to simulate the constant work of a baker.
+     * In case of failure, this method stops the run method.
      */
     @Override
-    public Order consume() {
-        try {
-            Order order = queue.get();
-            order.setState(COOKING);
-            return order;
-        } catch (InterruptedException exception) {
-            System.err.println("The baker №" + getId() + " could not take the order.");
-            return null;
+    public void work() {
+        Order order = get();
+        if (order == null) {
+            stop();
         }
+        accept(order);
     }
 
     /**
@@ -60,7 +57,7 @@ public class Baker extends Employee implements Consumer<Order>, Producer<Order> 
      * @param order - object which should be produced.
      */
     @Override
-    public void produce(Order order) {
+    public void accept(Order order) {
         long leadTime = random.nextLong(MAX_COOKING_TIME) / workingExperience;
         try {
             Thread.sleep(leadTime);
@@ -69,21 +66,24 @@ public class Baker extends Employee implements Consumer<Order>, Producer<Order> 
         } catch (NullPointerException exception) {
             System.err.println("The baker №" + getId() + " tried to fulfill an order that does not exist.");
         } catch (InterruptedException exception) {
-            System.err.println("The baker №" + getId() + "could not fulfill the order.");
+            Thread.currentThread().interrupt();
         }
     }
 
     /**
-     * Takes an order out of the order queue, executes the order within a certain time, and then sends it to the storage.
-     * This method is used in the run method, which allows to simulate the constant work of a baker.
-     * In case of failure, this method stops the run method.
+     * Retrieves an order from the order queue.
+     *
+     * @return consumed order.
      */
     @Override
-    public void work() {
-        Order order = consume();
-        if (order == null) {
-            stop();
+    public Order get() {
+        try {
+            Order order = queue.get();
+            order.setState(COOKING);
+            return order;
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            return null;
         }
-        produce(order);
     }
 }

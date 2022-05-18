@@ -9,19 +9,15 @@ import ru.nsu.fit.oop.task_2_1_2.json.PizzeriaJSON;
 import ru.nsu.fit.oop.task_2_1_2.order.Order;
 import ru.nsu.fit.oop.task_2_1_2.queue.MyBlockingDequeue;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * This class simulates the operation of a pizzeria.
  */
 public class Pizzeria implements Runnable {
-    private boolean runPizzeria;
+    private final int SLEEP_TIME = 1000;
     private List<Baker> bakers;
     private List<Courier> couriers;
     private final Customers customers;
@@ -29,17 +25,15 @@ public class Pizzeria implements Runnable {
     private final MyBlockingDequeue<Order> storage;
 
     private void setBakers(BakerJSON[] bakers) {
-        Stream<BakerJSON> bakerJSONStream = Arrays.stream(bakers);
-        this.bakers = bakerJSONStream
+        this.bakers = Arrays.stream(bakers)
                 .map(bakerJSON -> new Baker(bakerJSON.id(), bakerJSON.workingExperience(), this.queue, this.storage))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toList());
     }
 
     private void setCouriers(CourierJSON[] couriers) {
-        Stream<CourierJSON> courierJSONStream = Arrays.stream(couriers);
-        this.couriers = courierJSONStream
+        this.couriers = Arrays.stream(couriers)
                 .map(courierJSON -> new Courier(courierJSON.id(), courierJSON.bagCapacity(), this.storage))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toList());
     }
 
     /**
@@ -48,7 +42,6 @@ public class Pizzeria implements Runnable {
      * @param settings - pizzeria configuration.
      */
     public Pizzeria(PizzeriaJSON settings) {
-        this.runPizzeria = false;
         this.queue = new MyBlockingDequeue<>(settings.queueSize());
         this.storage = new MyBlockingDequeue<>(settings.storageSize());
         this.customers = new Customers(this.queue);
@@ -61,30 +54,34 @@ public class Pizzeria implements Runnable {
      */
     @Override
     public void run() {
-        runPizzeria = true;
-        ExecutorService bakersThreadPool = Executors.newFixedThreadPool(bakers.size());
-        ExecutorService couriersThreadPool = Executors.newFixedThreadPool(couriers.size());
-        bakers.forEach(bakersThreadPool::execute);
-        couriers.forEach(couriersThreadPool::execute);
-        Thread customersThread = new Thread(customers);
+        Thread customersThread = new Thread(this.customers);
         customersThread.start();
+        bakers.stream().map(Thread::new).forEach(Thread::start);
+        couriers.stream().map(Thread::new).forEach(Thread::start);
         System.out.println("The pizzeria is up and running!");
-        while (runPizzeria && !bakersThreadPool.isTerminated() && !couriersThreadPool.isTerminated()) {
-        }
-        if (bakersThreadPool.isTerminated() || couriersThreadPool.isTerminated()) {
-            System.out.println("Oops, something went wrong. The pizzeria is closed for a technical break.");
-        }
-        runPizzeria = false;
-        bakersThreadPool.shutdownNow();
-        couriersThreadPool.shutdownNow();
-        customers.stop();
     }
 
     /**
      * Stops the pizzeria from working.
      */
     public void stop() {
-        System.out.println("The pizzeria is closed. Come visit us tomorrow!");
-        runPizzeria = false;
+        this.customers.stop();
+        try {
+            Thread.sleep(this.SLEEP_TIME);
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+        }
+        bakers.forEach(Baker::stop);
+        try {
+            Thread.sleep(this.SLEEP_TIME);
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+        }
+        couriers.forEach(Courier::stop);
+        try {
+            Thread.sleep(this.SLEEP_TIME);
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
