@@ -24,8 +24,8 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainModule = 'ru.nsu.voronova'
-    mainClass = 'ru.nsu.voronova.SnakeApplication'
+    mainModule = 'ru.nsu.fit.oop.task_2_1_3'
+    mainClass = 'ru.nsu.fit.oop.task_2_1_3.SnakeApplication'
 }
 
 javafx {
